@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tljuu7eug-java-springboot-ci
+  namespace: tssc-gitops
+  finalizers: ["resources-finalizer.argocd.argoproj.io"]
+spec:
+  project: default
+  source:
+    path: ./components/tljuu7eug-java-springboot/overlays/ci
+    repoURL: https://github.com/rhtap-rhdh-qe/tljuu7eug-java-springboot-gitops.git
+    targetRevision: main
+  destination:
+    namespace: tssc-app-ci
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        argocd.argoproj.io/managed-by: tssc-gitops
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
